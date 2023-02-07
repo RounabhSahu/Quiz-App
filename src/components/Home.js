@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {data} from './data';
 import {useNavigate} from 'react-router-dom'
-import {collection,getDoc, getDocs ,query,orderBy ,setDoc,doc,} from 'firebase/firestore';
+import {collection,getDoc, getDocs ,query,orderBy ,setDoc,doc,deleteDoc} from 'firebase/firestore';
 import {db} from "../Firebase";
 import Quiz from './Quiz';
 import login from "./Login";
@@ -16,6 +16,7 @@ const Home = () => {
     //
     // },[])
     const [noData, setNoData] = React.useState(false);
+    const [data, setData] = React.useState(null);
     const navigate = useNavigate();
     const quizRef= collection(db,localStorage.getItem('uid'));
     const getData= async ()=>{
@@ -26,6 +27,9 @@ const Home = () => {
         console.log(userDocs)
         if(userDocs.length===1){
             setNoData(true)
+        }
+        else{
+            setData(userDocs.filter(item=>item.id!=="Empty Doc"))
         }
         // const data = await getDocs(quizRef)
         // if(localStorage.getItem('newUser')===true.toString()) {
@@ -64,7 +68,17 @@ const Home = () => {
         navigate('/Maker')
     }
     const taker=()=>{
-        navigate('/Maker')
+        navigate('/Taker')
+    }
+    const deleteQuiz=async(e)=>{
+        await deleteDoc(doc(db,localStorage.getItem('uid'),e.target.id)).then(async e=>{
+            const ref=await getDocs(quizRef);
+            const dat=ref.docs.map(doc=>{
+                return{id:doc.id,data:doc.data()}
+            });
+            setData(dat.filter(item=>item.id!=="Empty Doc"))
+        }).catch(e=>{
+            console.log(e)})
     }
     return (
         <div className="text-center flex flex-col space-y-1">
@@ -73,6 +87,21 @@ const Home = () => {
             <button onClick={()=>maker()} className="px-4 py-2 border border-slate-700 bg-blue-300 w-fit mx-auto">Maker</button>
             <button onClick={()=>taker()} className="px-4 py-2 border border-slate-700 bg-blue-300 w-fit mx-auto">Taker</button>
             {noData && <p className="px-4 py-2 bg-amber-300 rounded w-fit mx-auto">You have not made any quiz</p>}
+            {data && data.map((item, index) => {
+                return (
+                    <div key={'div quiz'+index.toString()}>
+                        QUIZ {index+1}<p  key={'head quiz'+index.toString()}>
+                        Topic : {item.id}</p>
+                        Share Code : {localStorage.getItem('uid')+"//"+item.id}
+                        <button
+                            key={'button quiz'+index.toString()}
+                            id={item.id}
+                            onClick={e=>deleteQuiz(e)}
+                            className="text-xl py-2 bg-sky-200 px-4 py-2 rounded border-slate-700 border-2 hover:bg-slate-300 hover:scale-110">Delete Quiz
+                        </button>
+                    </div>
+                )
+            })}
         </div>
     );
 };

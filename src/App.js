@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Result from './components/Result';
 import Taker from './components/Taker';
 import Review from "./components/Review";
+import Quiz from "./components/Quiz";
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
 
 
@@ -23,6 +24,7 @@ const App = () => {
                 <Route path='/' element={<Login/>}/>
                 <Route path='/Result' element={<Result/>}/>
                 <Route path='/Review' element={<Review/>}/>
+                <Route path='/Quiz' element={<Quiz/>}/>
             </Routes>
         </Router>
 

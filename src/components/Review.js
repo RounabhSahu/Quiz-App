@@ -5,7 +5,7 @@ import {db} from "../Firebase";
 const Review = () => {
     const [saved, setSaved] = React.useState(false);
     const [data, setData] = React.useState([]);
-    const quizRef= collection(db, 'Quiz_data');
+    const quizRef= collection(db, localStorage.getItem("uid"));
     let navigate = useNavigate();
     useEffect(()=>{
         if(localStorage.getItem('Question_data')===undefined){
@@ -16,7 +16,13 @@ const Review = () => {
         }
     },[])
     const handleSave=async ()=>{
-
+        await setDoc(doc(db,localStorage.getItem("uid"),localStorage.getItem("Quiz_topic")),{topic:localStorage.getItem('Quiz_topic'),data:data});
+        setSaved(true)
+        const timer=setTimeout(()=>{
+            localStorage.removeItem('Quiz_topic');
+            localStorage.removeItem('Question_data');
+            navigate("/Home")
+        },1500)
     }
 
     return (
@@ -37,7 +43,9 @@ const Review = () => {
                 )
             })}
             <button onClick={()=>navigate('/Maker')} disabled={saved}>Back to Change</button>
-            <button onClick={()=>{handleSave()}} disabled={handleSave()}> Save Quiz</button>
+            <button onClick={()=>{handleSave()}} disabled={false}> Save Quiz</button>
+            {saved && <div>Quiz Saved</div>}
+
         </div>
     );
 };
