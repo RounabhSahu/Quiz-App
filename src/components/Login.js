@@ -2,16 +2,16 @@ import React from 'react';
 import {auth,provider} from "../Firebase";
 import {signInWithPopup} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
-import {collection, getDocs ,query,orderBy} from 'firebase/firestore';
+import {collection, getDocs ,query,orderBy,setDoc,doc} from 'firebase/firestore';
 import {db} from "../Firebase";
 
 const Login = () => {
-    const quizRef= collection(db, 'Quiz_data');
+
     const navigate = useNavigate();
     const [newUser, setNewUser] = React.useState(false)
     const signInWithGoogle =async () => {
-        const data = await getDocs(quizRef);
-        signInWithPopup(auth, provider).then((result) => {
+
+        signInWithPopup(auth, provider).then(async (result) => {
             console.log(auth);
             console.log(result)
             localStorage.setItem("isLoggedIn", true);
@@ -21,11 +21,15 @@ const Login = () => {
             localStorage.setItem("uid", result.user.uid);
             localStorage.setItem("newUser", false);
 
-            const users=data.docs.map(doc => doc.id);
-            if( !users.includes(result.user.uid)) {
-                setNewUser(true)
-                localStorage.setItem("newUser", true);
-            }
+            const UserCollection=await collection(db,result.user.uid)
+            const chk= await getDocs(UserCollection).then(async(result) => {
+                if(result.docs.map(d=>d.data()).length===0){
+                    setNewUser(true)
+                    await setDoc(doc(db,localStorage.getItem('uid'),'Empty Doc'), {})
+                }
+            }).catch(e=>{
+                console.log(e)})
+
             const timer = setTimeout(()=>{
 
                 navigate("/Home")

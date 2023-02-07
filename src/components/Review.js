@@ -5,6 +5,7 @@ import {db} from "../Firebase";
 const Review = () => {
     const [saved, setSaved] = React.useState(false);
     const [data, setData] = React.useState([]);
+    const quizRef= collection(db, 'Quiz_data');
     let navigate = useNavigate();
     useEffect(()=>{
         if(localStorage.getItem('Question_data')===undefined){
