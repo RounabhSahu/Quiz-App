@@ -30,7 +30,7 @@ const Taker = () => {
                 setEnable(title)
                 localStorage.setItem('Questions_data',JSON.stringify(result.docs.map(d=>d.data()).filter(d=>d.topic===title)[0].data))
                 localStorage.setItem('Questions_Title',JSON.stringify(result.docs.map(d=>d.data()).filter(d=>d.topic===title)[0].topic))
-                const timer=setTimer(()=>{
+                const timer=setTimeout(()=>{
                     navigate('/Quiz')
                 })
             }

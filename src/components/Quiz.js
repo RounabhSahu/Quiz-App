@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 // import {uuid} from 'uuidv4';
 const Quiz = () => {
-    const questions = JSON.parse(localStorage.getItem('questions'))
+    const questions = JSON.parse(localStorage.getItem('Questions_data'))
     const [score, setScore] = useState(0)
     const [currentQuestion, setCurrentQuestion] = useState('');
     const [answer, setAnswer] = useState(null);
@@ -16,7 +16,7 @@ const Quiz = () => {
 
         setDisabled(true)
         setFlag(true)
-        setCurrentQuestion(questions[index].question)
+        setCurrentQuestion(questions[index].value)
         setOptions(questions[index].choices)
     },[index])
     useEffect(() => {
@@ -46,10 +46,18 @@ const Quiz = () => {
         <div className="bg-yellow-500">
             {currentQuestion}
             <ul >
-                {options.map(option => (<li onClick={()=>{handleAnswer(option)}} key={option} className={(answer===option?"bg-white ":"") +"border border-black"}>{option}</li>))}
+                {options.map(option => (<li
+                                            onClick={()=>{handleAnswer(option)}}
+                                            key={option}
+                                            className={(answer===option?"bg-white ":"") +"border border-black"}>{option}
+                                        </li>))}
             </ul>
 
-            {flag && <button onClick={() => {handleNext()}} disabled={disabled} className={answer?"bg-blue-200":"bg-green-500"} >{index===questions.length-1?'Submit':'Next'} </button>}
+            {flag &&
+                <button onClick={() => {handleNext()}}
+                                        disabled={disabled}
+                                        className={answer?"bg-blue-200":"bg-green-500"} >{index===questions.length-1?'Submit':'Next'}
+                </button>}
         </div>
     )
     return (
