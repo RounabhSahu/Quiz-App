@@ -18,7 +18,7 @@ const Quiz = () => {
         setFlag(true)
         setCurrentQuestion(questions[index].value)
         setOptions(questions[index].choices)
-    },[index,questions])
+    },[index])
     useEffect(() => {
         localStorage.setItem('attempted',false)
     }, []);
