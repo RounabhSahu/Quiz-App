@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
-import {collection,getDoc, getDocs ,query,orderBy,addDoc ,setDoc,doc} from 'firebase/firestore';
+import {setDoc,doc} from 'firebase/firestore';
 import {db} from "../Firebase";
 const Review = () => {
     const [saved, setSaved] = React.useState(false);
     const [data, setData] = React.useState([]);
-    const quizRef= collection(db, localStorage.getItem("uid"));
+    // const quizRef= collection(db, localStorage.getItem("uid"));
     let navigate = useNavigate();
     useEffect(()=>{
         if(localStorage.getItem('Question_data')===undefined){
@@ -14,11 +14,11 @@ const Review = () => {
         else{
             setData(JSON.parse(localStorage.getItem('Question_data')))
         }
-    },[])
+    },[navigate])
     const handleSave=async ()=>{
         await setDoc(doc(db,localStorage.getItem("uid"),localStorage.getItem("Quiz_topic")),{topic:localStorage.getItem('Quiz_topic'),data:data});
         setSaved(true)
-        const timer=setTimeout(()=>{
+        setTimeout(()=>{
             localStorage.removeItem('Quiz_topic');
             localStorage.removeItem('Question_data');
             navigate("/Home")

@@ -2,7 +2,7 @@ import React from 'react';
 import {auth,provider} from "../Firebase";
 import {signInWithPopup} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
-import {collection, getDocs ,query,orderBy,setDoc,doc} from 'firebase/firestore';
+import {collection, getDocs ,setDoc,doc} from 'firebase/firestore';
 import {db} from "../Firebase";
 
 const Login = () => {
@@ -22,7 +22,9 @@ const Login = () => {
             localStorage.setItem("newUser", false);
 
             const UserCollection=await collection(db,result.user.uid)
-            const chk= await getDocs(UserCollection).then(async(result) => {
+
+            // eslint-disable-next-line no-unused-vars
+            await getDocs(UserCollection).then(async(result) => {
                 if(result.docs.map(d=>d.data()).length===0){
                     setNewUser(true)
                     await setDoc(doc(db,localStorage.getItem('uid'),'Empty Doc'), {})
@@ -30,7 +32,8 @@ const Login = () => {
             }).catch(e=>{
                 console.log(e)})
 
-            const timer = setTimeout(()=>{
+            // eslint-disable-next-line no-unused-vars
+            setTimeout(()=>{
 
                 navigate("/Home")
             },1000)

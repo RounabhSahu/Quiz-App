@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {collection,getDoc, getDocs ,query,orderBy,addDoc ,setDoc,doc} from 'firebase/firestore';
+import {collection, getDocs} from 'firebase/firestore';
 import {db} from "../Firebase";
-import Quiz from "./Quiz";
+// import Quiz from "./Quiz";
 import {useNavigate} from "react-router-dom";
 const Taker = () => {
     const [enable,setEnable] = useState('');
@@ -16,7 +16,7 @@ const Taker = () => {
         let [uid,title]=code.split('//');
         console.log(uid,title)
         const UserCollection=await collection(db,uid)
-        const chk= await getDocs(UserCollection).then(async(result) => {
+        await getDocs(UserCollection).then(async(result) => {
             if(result.docs.map(d=>d.data()).length===0){
                 setWarn(true)
                 setEnable(null)
@@ -30,7 +30,7 @@ const Taker = () => {
                 setEnable(title)
                 localStorage.setItem('Questions_data',JSON.stringify(result.docs.map(d=>d.data()).filter(d=>d.topic===title)[0].data))
                 localStorage.setItem('Questions_Title',JSON.stringify(result.docs.map(d=>d.data()).filter(d=>d.topic===title)[0].topic))
-                const timer=setTimeout(()=>{
+                setTimeout(()=>{
                     navigate('/Quiz')
                 })
             }

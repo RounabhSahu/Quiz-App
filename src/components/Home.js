@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react';
-import {data} from './data';
+import React from 'react';
+// import {data} from './data';
 import {useNavigate} from 'react-router-dom'
-import {collection,getDoc, getDocs ,query,orderBy ,setDoc,doc,deleteDoc} from 'firebase/firestore';
+import {collection, getDocs ,doc,deleteDoc} from 'firebase/firestore';
 import {db} from "../Firebase";
-import Quiz from './Quiz';
-import login from "./Login";
+// import Quiz from './Quiz';
+// import login from "./Login";
 
 const Home = () => {
     // useEffect(() => {
@@ -71,7 +71,7 @@ const Home = () => {
         navigate('/Taker')
     }
     const deleteQuiz=async(e)=>{
-        await deleteDoc(doc(db,localStorage.getItem('uid'),e.target.id)).then(async e=>{
+        await deleteDoc(doc(db,localStorage.getItem('uid'),e.target.id)).then(async ()=>{
             const ref=await getDocs(quizRef);
             const dat=ref.docs.map(doc=>{
                 return{id:doc.id,data:doc.data()}
