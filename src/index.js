@@ -4,9 +4,12 @@ import './index.css';
 import App from './App';
 import {BrowserRouter as Router} from 'react-router-dom';
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
+
 // <React.StrictMode><App /></React.StrictMode>
     <Router>
+        <script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
         <App/>
     </Router>
 

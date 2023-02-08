@@ -18,7 +18,7 @@ const App = () => {
             {/*    <Link to='/maker'>Maker</Link>*/}
             {/*</div>*/}
             <Routes>
-                <Route path='/Home' element={<Home/>}/>
+                <Route path='/Home' element={<Home/>}></Route>
                 <Route path='/Maker' element={<Maker/>}/>
                 <Route path='/Taker' element={<Taker/>}></Route>
                 <Route path='/' element={<Login/>}/>
