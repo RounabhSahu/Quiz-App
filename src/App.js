@@ -11,7 +11,7 @@ import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
 
 const App = () => {
     return (
-        <Router >
+        < >
             {/*<div>*/}
             {/*    <Link to='/'>Home</Link>*/}
             {/*    <Link to='/login'>Login</Link>*/}
@@ -26,7 +26,7 @@ const App = () => {
                 <Route path='/Review' element={<Review/>}/>
                 <Route path='/Quiz' element={<Quiz/>}/>
             </Routes>
-        </Router>
+        </>
 
 
     );
