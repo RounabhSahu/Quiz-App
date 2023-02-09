@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {auth,provider} from "../Firebase";
 import {signInWithPopup} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
@@ -8,7 +8,9 @@ import {db} from "../Firebase";
 const Login = () => {
 
     const navigate = useNavigate();
-    const [newUser, setNewUser] = React.useState(false)
+    const [newUser, setNewUser] = useState(false)
+
+
     const signInWithGoogle =async () => {
 
         signInWithPopup(auth, provider).then(async (result) => {
@@ -38,15 +40,16 @@ const Login = () => {
                 navigate("/Home")
             },1000)
         }).catch((error) => {
-            alert(error.message);
+            console.log(error.message);
         })
     }
 
     return (
-        <div className="bg-amber-200 w-fit mx-auto my-40 p-6 rounded border-slate-500 border-x-2 text-center">
-            <h3 className="text-3xl py-2">Welcome</h3>
-            <p className="text-xl py-2">Sign in to Continue to this simple blogspot</p>
-            <button onClick={signInWithGoogle} className="text-xl py-2 bg-sky-200 px-4 py-2 rounded border-slate-700 border-2 hover:bg-slate-300 hover:scale-110">Sign In With Google</button>
+        <div className={"bg-amber-300 h-screen w-fit mx-auto p-6 rounded border-slate-500 border-x-2 text-center"}>
+            <h3 className="text-3xl py-2">Welcome To Quizzzery <span></span></h3>
+            <p className="text-xl py-2">Here you can Create app and Share Code for others to attend the quiz</p>
+            <p className="text-xl py-2">Sign in to Continue</p>
+            <button onClick={signInWithGoogle} className="text-xl mt-8 py-2 bg-sky-200 px-4 py-2 rounded border-slate-700 border-2 hover:bg-slate-300 hover:scale-110">Sign In With Google</button>
             {newUser && <p className="text-xl py-2 text-violet-500">New user</p>}
         </div>
     );

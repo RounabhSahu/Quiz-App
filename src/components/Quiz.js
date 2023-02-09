@@ -24,10 +24,11 @@ const Quiz = () => {
     }, []);
 
     const handleNext = () => {
+        if(answer===questions[index].correctAnswer){
+            setScore(score+1)
+        }
         if(index<questions.length-1){
-            if(answer===questions[index].correctAnswer){
-                setScore(score+1)
-            }
+
             setIndex(index+1)
         }
         else{

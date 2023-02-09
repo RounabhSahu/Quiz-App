@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 // import {data} from './data';
 import {useNavigate} from 'react-router-dom'
 import {collection, getDocs ,doc,deleteDoc} from 'firebase/firestore';
@@ -7,16 +7,9 @@ import {db} from "../Firebase";
 // import login from "./Login";
 
 const Home = () => {
-    // useEffect(() => {
-    //     localStorage.setItem('title', JSON.stringify(data.topic));
-    //     localStorage.setItem('level', JSON.stringify(data.level));
-    //     localStorage.setItem('questions', JSON.stringify(data.questions));
-    //     localStorage.setItem('value',JSON.stringify(data.perQuestionScore));
-    //     localStorage.setItem('loaded',true);
-    //
-    // },[])
-    const [noData, setNoData] = React.useState(false);
-    const [data, setData] = React.useState(null);
+
+    const [noData, setNoData] =useState(false);
+    const [data, setData] = useState(null);
     const navigate = useNavigate();
     const quizRef= collection(db,localStorage.getItem('uid'));
     const getData= async ()=>{
@@ -31,6 +24,7 @@ const Home = () => {
         else{
             setData(userDocs.filter(item=>item.id!=="Empty Doc"))
         }
+
         // const data = await getDocs(quizRef)
         // if(localStorage.getItem('newUser')===true.toString()) {
         //     console.log('working')
@@ -80,28 +74,60 @@ const Home = () => {
         }).catch(e=>{
             console.log(e)})
     }
+    const handleLogout=()=>{
+        localStorage.setItem("newUser", false);
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("name");
+        localStorage.removeItem("email");
+        localStorage.removeItem("profile");
+        localStorage.removeItem("uid");
+        navigate("/")
+    }
+    const copy2clip=(e,i)=>{
+
+        navigator.clipboard.writeText(e.target.innerText).then(()=>{
+            document.getElementById("msg"+i.toString()).innerHTML="Copied!";
+        }).catch(()=>{
+            document.getElementById("msg"+i.toString()).innerHTML="Failed to Copy!";
+        });
+
+        setTimeout(()=>document.getElementById("msg"+i.toString()).innerHTML="", 1000);
+    }
     return (
-        <div className="text-center flex flex-col space-y-1">
+        <div className="bg-amber-300 w-full flex flex-col space-y-2 pt-2 pb-4">
             {/*{localStorage.getItem('loaded') === 'true'? <Quiz/>:null}*/}
-            <button onClick={getData} className="px-4 py-2 border border-slate-700 bg-blue-300 w-fit mx-auto">Get quizzes that you made</button>
-            <button onClick={()=>maker()} className="px-4 py-2 border border-slate-700 bg-blue-300 w-fit mx-auto">Maker</button>
-            <button onClick={()=>taker()} className="px-4 py-2 border border-slate-700 bg-blue-300 w-fit mx-auto">Taker</button>
+            <button onClick={getData} className="mx-auto w-fit text-lg py-2 bg-sky-200 px-4 py-2 rounded border-slate-700 border-2 hover:bg-slate-300 hover:scale-110">Get Quizzes that you made</button>
+            <button onClick={()=>maker()} className="mx-auto w-fit text-lg py-2 bg-sky-200 px-4 py-2 rounded border-slate-700 border-2 hover:bg-slate-300 hover:scale-110">Create Quiz</button>
+            <button onClick={()=>taker()} className="mx-auto w-fit text-lg py-2 bg-sky-200 px-4 py-2 rounded border-slate-700 border-2 hover:bg-slate-300 hover:scale-110">Taker Quiz</button>
+            <button
+                onClick={()=>handleLogout()}
+                className="mx-auto w-fit text-lg py-2 bg-sky-200 px-4 py-2 rounded border-slate-700 border-2 hover:bg-red-300 hover:scale-110">
+                Logout
+            </button>
             {noData && <p className="px-4 py-2 bg-amber-300 rounded w-fit mx-auto">You have not made any quiz</p>}
             {data && data.map((item, index) => {
                 return (
-                    <div key={'div quiz'+index.toString()}>
-                        QUIZ {index+1}<p  key={'head quiz'+index.toString()}>
-                        Topic : {item.id}</p>
-                        Share Code : {localStorage.getItem('uid')+"//"+item.id}
+                    <div
+                        className="flex flex-col mx-auto w-full py-2 px-4 bg-gray-200 rounded border-slate-700 border-2 hover:bg-slate-300 sm:w-[600px]"
+                        key={'div quiz'+index.toString()}>
+                        <span className="text-xl font-serif">QUIZ {index+1}</span>
+                        <p  key={'head quiz'+index.toString()}></p>
+                        <hr className="border border-slate-500"/>
+                        <p><b>Topic :</b> {item.id}</p>
+                        <span><b>Share Code :</b><span className="text-gray-500 font-light">( Click below to Copy! ) <span id={'msg'+index.toString()} className="text-red-600"></span></span></span>
+                        <span onClick={(e)=>copy2clip(e,index)} className="cursor-pointer whitespace-nowrap overflow-auto rounded py-1 px-2 border border-slate-700 bg-lime-400 hover:bg-lime-300">{localStorage.getItem('uid')+"//"+item.id}</span>
+
                         <button
                             key={'button quiz'+index.toString()}
                             id={item.id}
                             onClick={e=>deleteQuiz(e)}
-                            className="text-xl py-2 bg-sky-200 px-4 py-2 rounded border-slate-700 border-2 hover:bg-slate-300 hover:scale-110">Delete Quiz
+                            className="my-2 w-fit mx-auto text-lg py-2 bg-sky-200 px-3 py-1 rounded border-slate-700 border-2 hover:bg-emerald-200 hover:scale-110">Delete Quiz
                         </button>
+
                     </div>
                 )
             })}
+
         </div>
     );
 };
